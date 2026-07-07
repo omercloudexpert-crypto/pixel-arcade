@@ -55,8 +55,8 @@ export class VehiclePhysics {
 
     this.state.handbrake = input.handbrake;
 
-    // Steering
-    const targetSteering = (input.left ? 1 : 0) - (input.right ? 1 : 0);
+    // Steering (Fixed: Right is positive, Left is negative)
+    const targetSteering = (input.right ? 1 : 0) - (input.left ? 1 : 0);
     this.state.steering = THREE.MathUtils.lerp(this.state.steering, targetSteering, dt * 5);
 
     // Physics calculations
@@ -86,7 +86,8 @@ export class VehiclePhysics {
     
     if (speed > 0.1) {
       const turnMultiplier = Math.min(speed / 10, 1); // Turn slower at low speeds
-      this.state.rotation -= this.state.steering * this.turnSpeed * turnMultiplier * dt * (this.state.velocity.dot(forwardDir) > 0 ? 1 : -1);
+      // Fixed rotation direction
+      this.state.rotation += this.state.steering * this.turnSpeed * turnMultiplier * dt * (this.state.velocity.dot(forwardDir) > 0 ? 1 : -1);
     }
 
     // Update position

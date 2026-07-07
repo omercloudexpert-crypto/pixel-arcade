@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import Cricket3DGame from "./Cricket3DGame";
 import CyberDrift from "./games/CyberDrift";
+import { SpaceDefender, FlappyWings, MemoryMatch, Blackjack, WordScramble, Game2048 } from "./games/MiniGames";
 
 // --- Types ---
 interface Game {
@@ -620,11 +621,37 @@ export default function App() {
                   {/* Game Router */}
                   {selectedGame.title === "CyberDrift" && <CyberDrift onExit={() => setIsPlaying(false)} />}
                   {selectedGame.title === "Cricket 3D" && <Cricket3DGame onExit={() => setIsPlaying(false)} />}
+                  
+                  {/* Arcade / Action Games */}
+                  {["Space Shooter", "Alien Invaders", "Tank Battle", "Cannon Shooter", "Asteroids", "Brick Breaker"].includes(selectedGame.title) && 
+                    <SpaceDefender onExit={() => setIsPlaying(false)} />}
+                  
+                  {/* Side Scrollers */}
+                  {["Flappy Wings", "Helicopter", "Penguin Slide", "Platform Jump", "Endless Runner", "Ninja Runner"].includes(selectedGame.title) && 
+                    <FlappyWings onExit={() => setIsPlaying(false)} />}
+                  
+                  {/* Puzzle Games */}
+                  {["Memory Match", "Simon Says", "Minesweeper"].includes(selectedGame.title) && 
+                    <MemoryMatch onExit={() => setIsPlaying(false)} />}
+                  {["2048", "Sliding Puzzle", "Block Puzzle", "Sudoku"].includes(selectedGame.title) && 
+                    <Game2048 onExit={() => setIsPlaying(false)} />}
+                  
+                  {/* Card Games */}
+                  {["Blackjack", "Poker", "Solitaire"].includes(selectedGame.title) && 
+                    <Blackjack onExit={() => setIsPlaying(false)} />}
+                  
+                  {/* Word Games */}
+                  {["Word Scramble", "Hangman", "Word Search", "Crossword", "Trivia Quiz"].includes(selectedGame.title) && 
+                    <WordScramble onExit={() => setIsPlaying(false)} />}
+                  
+                  {/* Classic Games */}
                   {selectedGame.title === "Snake" && <SnakeGame onExit={() => setIsPlaying(false)} />}
-                  {selectedGame.title === "Pong" && <PongGame onExit={() => setIsPlaying(false)} />}
-                  {selectedGame.title === "Tic Tac Toe" && <TicTacToeGame onExit={() => setIsPlaying(false)} />}
+                  {["Pong", "Pinball"].includes(selectedGame.title) && <PongGame onExit={() => setIsPlaying(false)} />}
+                  {["Tic Tac Toe", "Connect Four", "Chess", "Checkers"].includes(selectedGame.title) && <TicTacToeGame onExit={() => setIsPlaying(false)} />}
+                  
+                  {/* Casual / Tools (Reflex Challenge) */}
                   {
-                    !["Snake", "Pong", "Tic Tac Toe"].includes(selectedGame.title) && 
+                    !["CyberDrift", "Cricket 3D", "Space Shooter", "Alien Invaders", "Tank Battle", "Cannon Shooter", "Asteroids", "Brick Breaker", "Flappy Wings", "Helicopter", "Penguin Slide", "Platform Jump", "Endless Runner", "Ninja Runner", "Memory Match", "Simon Says", "Minesweeper", "2048", "Sliding Puzzle", "Block Puzzle", "Sudoku", "Blackjack", "Poker", "Solitaire", "Word Scramble", "Hangman", "Word Search", "Crossword", "Trivia Quiz", "Snake", "Pong", "Pinball", "Tic Tac Toe", "Connect Four", "Chess", "Checkers"].includes(selectedGame.title) && 
                     <ClickerGame game={selectedGame} onExit={() => setIsPlaying(false)} />
                   }
                 </div>
