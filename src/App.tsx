@@ -11,6 +11,7 @@ interface Game {
   category: string;
   emoji: string;
   gradient: string;
+  engine: string;
 }
 
 // --- Data ---
@@ -28,59 +29,59 @@ const categories = [
 ];
 
 const games: Game[] = [
-  { id: -1, title: "CyberDrift", description: "AAA Open World Racing. Drive, drift, and explore a cyberpunk city.", category: "sports", emoji: "🏎️", gradient: "from-purple-600 to-blue-800" },
-  { id: 0, title: "Cricket 3D", description: "Full 3D Cricket experience! Bat against AI bowling.", category: "sports", emoji: "🏏", gradient: "from-green-600 to-emerald-800" },
-  { id: 1, title: "Snake", description: "Eat food to grow longer without hitting yourself!", category: "arcade", emoji: "🐍", gradient: "from-green-500 to-emerald-700" },
-  { id: 2, title: "Pac-Man", description: "Eat all dots while avoiding ghosts in the maze!", category: "arcade", emoji: "👻", gradient: "from-yellow-400 to-orange-500" },
-  { id: 3, title: "Brick Breaker", description: "Smash bricks with a bouncing ball and paddle!", category: "arcade", emoji: "🧱", gradient: "from-red-500 to-orange-600" },
-  { id: 4, title: "Pong", description: "The original video game. Play against AI!", category: "arcade", emoji: "🏓", gradient: "from-gray-600 to-gray-800" },
-  { id: 5, title: "Asteroids", description: "Navigate through an asteroid field and survive!", category: "arcade", emoji: "☄️", gradient: "from-gray-700 to-slate-900" },
-  { id: 6, title: "Flappy Wings", description: "Tap to fly through gaps between pipes!", category: "arcade", emoji: "🐦", gradient: "from-lime-400 to-green-500" },
-  { id: 7, title: "Platform Jump", description: "Jump from platform to platform and reach the top!", category: "arcade", emoji: "⬆️", gradient: "from-green-400 to-green-600" },
-  { id: 8, title: "Endless Runner", description: "Run, jump, and dodge obstacles endlessly!", category: "arcade", emoji: "🏃", gradient: "from-orange-500 to-red-600" },
-  { id: 9, title: "Helicopter", description: "Navigate through a cave without crashing!", category: "arcade", emoji: "🚁", gradient: "from-blue-500 to-blue-700" },
-  { id: 10, title: "Ninja Runner", description: "Run as a ninja, throw shurikens, avoid traps!", category: "arcade", emoji: "🥷", gradient: "from-gray-800 to-red-900" },
-  { id: 11, title: "Penguin Slide", description: "Slide through icy lanes, dodge rocks!", category: "arcade", emoji: "🐧", gradient: "from-cyan-400 to-blue-500" },
-  { id: 12, title: "Pinball", description: "Classic pinball action! Hit bumpers, score points!", category: "arcade", emoji: "🎱", gradient: "from-purple-600 to-indigo-800" },
-  { id: 13, title: "Space Shooter", description: "Defend Earth from waves of alien invaders!", category: "action", emoji: "🚀", gradient: "from-indigo-600 to-purple-800" },
-  { id: 14, title: "Alien Invaders", description: "Classic space invaders! Shoot the aliens!", category: "action", emoji: "👾", gradient: "from-green-600 to-green-800" },
-  { id: 15, title: "Tank Battle", description: "Command a tank and destroy enemy forces!", category: "action", emoji: "🔫", gradient: "from-amber-700 to-yellow-900" },
-  { id: 16, title: "Cannon Shooter", description: "Aim your cannon and hit all targets!", category: "action", emoji: "💥", gradient: "from-red-600 to-red-800" },
-  { id: 17, title: "Block Puzzle", description: "Stack falling blocks to clear lines. Tetris-style!", category: "puzzle", emoji: "🧱", gradient: "from-violet-500 to-purple-700" },
-  { id: 18, title: "2048", description: "Slide tiles to combine numbers. Reach 2048!", category: "puzzle", emoji: "🔢", gradient: "from-orange-400 to-orange-600" },
-  { id: 19, title: "Minesweeper", description: "Uncover squares while avoiding hidden mines!", category: "puzzle", emoji: "💣", gradient: "from-gray-500 to-gray-700" },
-  { id: 20, title: "Memory Match", description: "Flip cards to find matching pairs!", category: "puzzle", emoji: "🧠", gradient: "from-pink-500 to-rose-600" },
-  { id: 21, title: "Sliding Puzzle", description: "Slide numbered tiles into order!", category: "puzzle", emoji: "🧩", gradient: "from-indigo-500 to-blue-600" },
-  { id: 22, title: "Simon Says", description: "Remember and repeat the color sequence!", category: "puzzle", emoji: "🎵", gradient: "from-purple-500 to-violet-700" },
-  { id: 23, title: "Maze Escape", description: "Navigate randomly generated mazes!", category: "puzzle", emoji: "🏰", gradient: "from-teal-500 to-emerald-700" },
-  { id: 24, title: "Sudoku", description: "Fill the 9x9 grid with numbers 1-9!", category: "puzzle", emoji: "9️⃣", gradient: "from-blue-500 to-indigo-600" },
-  { id: 25, title: "Word Search", description: "Find hidden words in the letter grid!", category: "puzzle", emoji: "🔤", gradient: "from-cyan-500 to-teal-600" },
-  { id: 26, title: "Bubble Shooter", description: "Match 3 or more bubbles to pop them!", category: "puzzle", emoji: "🫧", gradient: "from-sky-400 to-blue-600" },
-  { id: 27, title: "Tic Tac Toe", description: "Classic X and O game vs smart AI!", category: "strategy", emoji: "⭕", gradient: "from-cyan-500 to-blue-600" },
-  { id: 28, title: "Connect Four", description: "Drop discs to connect four in a row!", category: "strategy", emoji: "🔴", gradient: "from-orange-500 to-yellow-500" },
-  { id: 29, title: "Basketball", description: "Shoot hoops! Time your shot perfectly!", category: "sports", emoji: "🏀", gradient: "from-orange-500 to-red-600" },
-  { id: 30, title: "Mini Golf", description: "Putt your way through 9 holes!", category: "sports", emoji: "⛳", gradient: "from-green-500 to-green-700" },
-  { id: 31, title: "Darts", description: "Aim carefully and hit the bullseye!", category: "sports", emoji: "🎯", gradient: "from-red-500 to-orange-600" },
-  { id: 32, title: "Bowling", description: "Strike down all the pins!", category: "sports", emoji: "🎳", gradient: "from-rose-600 to-pink-700" },
-  { id: 33, title: "Billiards", description: "Sink all balls into the pockets!", category: "sports", emoji: "🎱", gradient: "from-pink-400 to-rose-600" },
-  { id: 34, title: "Coin Flip", description: "Heads or tails? Test your luck!", category: "casual", emoji: "🪙", gradient: "from-yellow-400 to-yellow-600" },
-  { id: 35, title: "Dice Roller", description: "Roll the dice and get a high number!", category: "casual", emoji: "🎲", gradient: "from-amber-500 to-orange-600" },
-  { id: 36, title: "Spin Wheel", description: "Spin the wheel and win prizes!", category: "casual", emoji: "🎡", gradient: "from-pink-500 to-purple-600" },
-  { id: 37, title: "Blackjack", description: "Beat the dealer to 21!", category: "cards", emoji: "🃏", gradient: "from-green-700 to-green-900" },
-  { id: 38, title: "Solitaire", description: "Classic card sorting game!", category: "cards", emoji: "🂡", gradient: "from-red-600 to-red-800" },
-  { id: 39, title: "Hangman", description: "Guess the word before it's too late!", category: "word", emoji: "📝", gradient: "from-amber-600 to-amber-800" },
-  { id: 40, title: "Crossword", description: "Fill in the crossword puzzle!", category: "word", emoji: "📰", gradient: "from-yellow-500 to-amber-600" },
-  { id: 41, title: "Calculator", description: "A simple calculator tool!", category: "tools", emoji: "🧮", gradient: "from-gray-500 to-gray-700" },
-  { id: 42, title: "Stopwatch", description: "Time events with precision!", category: "tools", emoji: "⏱️", gradient: "from-blue-600 to-indigo-700" },
-  { id: 43, title: "Chess", description: "Classic chess against AI opponent!", category: "strategy", emoji: "♟️", gradient: "from-amber-700 to-amber-900" },
-  { id: 44, title: "Checkers", description: "Jump and capture all opponent pieces!", category: "strategy", emoji: "🔴", gradient: "from-red-700 to-red-900" },
-  { id: 45, title: "Rock Paper Scissors", description: "Classic hand game against computer!", category: "casual", emoji: "✊", gradient: "from-orange-400 to-red-500" },
-  { id: 46, title: "Trivia Quiz", description: "Test your knowledge with fun questions!", category: "casual", emoji: "❓", gradient: "from-purple-500 to-indigo-600" },
-  { id: 47, title: "Typing Speed", description: "How fast can you type?", category: "tools", emoji: "⌨️", gradient: "from-slate-600 to-slate-800" },
-  { id: 48, title: "Color Match", description: "Match colors as fast as you can!", category: "casual", emoji: "🎨", gradient: "from-fuchsia-500 to-pink-600" },
-  { id: 49, title: "Reaction Time", description: "Test your reflexes!", category: "casual", emoji: "⚡", gradient: "from-yellow-400 to-orange-500" },
-  { id: 50, title: "Poker", description: "Classic five-card draw poker!", category: "cards", emoji: "🃏", gradient: "from-green-600 to-emerald-800" },
-  { id: 51, title: "Word Scramble", description: "Unscramble letters to form words!", category: "word", emoji: "🔀", gradient: "from-teal-500 to-cyan-700" },
+  { id: -1, title: "CyberDrift", description: "AAA Open World Racing.", category: "sports", emoji: "🏎️", gradient: "from-purple-600 to-blue-800", engine: "cyberdrift" },
+  { id: 0, title: "Cricket 3D", description: "Full 3D Cricket experience!", category: "sports", emoji: "🏏", gradient: "from-green-600 to-emerald-800", engine: "cricket" },
+  { id: 1, title: "Snake", description: "Eat food to grow longer!", category: "arcade", emoji: "🐍", gradient: "from-green-500 to-emerald-700", engine: "snake" },
+  { id: 2, title: "Pac-Man", description: "Eat dots, avoid ghosts!", category: "arcade", emoji: "👻", gradient: "from-yellow-400 to-orange-500", engine: "runner" },
+  { id: 3, title: "Brick Breaker", description: "Smash bricks!", category: "arcade", emoji: "🧱", gradient: "from-red-500 to-orange-600", engine: "shooter" },
+  { id: 4, title: "Pong", description: "The original video game.", category: "arcade", emoji: "🏓", gradient: "from-gray-600 to-gray-800", engine: "pong" },
+  { id: 5, title: "Asteroids", description: "Survive the asteroid field!", category: "arcade", emoji: "☄️", gradient: "from-gray-700 to-slate-900", engine: "shooter" },
+  { id: 6, title: "Flappy Wings", description: "Fly through gaps!", category: "arcade", emoji: "🐦", gradient: "from-lime-400 to-green-500", engine: "runner" },
+  { id: 7, title: "Platform Jump", description: "Reach the top!", category: "arcade", emoji: "⬆️", gradient: "from-green-400 to-green-600", engine: "runner" },
+  { id: 8, title: "Endless Runner", description: "Dodge obstacles endlessly!", category: "arcade", emoji: "🏃", gradient: "from-orange-500 to-red-600", engine: "runner" },
+  { id: 9, title: "Helicopter", description: "Navigate the cave!", category: "arcade", emoji: "🚁", gradient: "from-blue-500 to-blue-700", engine: "runner" },
+  { id: 10, title: "Ninja Runner", description: "Throw shurikens, avoid traps!", category: "arcade", emoji: "🥷", gradient: "from-gray-800 to-red-900", engine: "runner" },
+  { id: 11, title: "Penguin Slide", description: "Slide through icy lanes!", category: "arcade", emoji: "🐧", gradient: "from-cyan-400 to-blue-500", engine: "runner" },
+  { id: 12, title: "Pinball", description: "Hit bumpers, score points!", category: "arcade", emoji: "🎱", gradient: "from-purple-600 to-indigo-800", engine: "pong" },
+  { id: 13, title: "Space Shooter", description: "Defend Earth!", category: "action", emoji: "🚀", gradient: "from-indigo-600 to-purple-800", engine: "shooter" },
+  { id: 14, title: "Alien Invaders", description: "Shoot the aliens!", category: "action", emoji: "👾", gradient: "from-green-600 to-green-800", engine: "shooter" },
+  { id: 15, title: "Tank Battle", description: "Destroy enemy forces!", category: "action", emoji: "🔫", gradient: "from-amber-700 to-yellow-900", engine: "shooter" },
+  { id: 16, title: "Cannon Shooter", description: "Hit all targets!", category: "action", emoji: "💥", gradient: "from-red-600 to-red-800", engine: "shooter" },
+  { id: 17, title: "Block Puzzle", description: "Stack falling blocks!", category: "puzzle", emoji: "🧱", gradient: "from-violet-500 to-purple-700", engine: "puzzle2048" },
+  { id: 18, title: "2048", description: "Reach 2048!", category: "puzzle", emoji: "🔢", gradient: "from-orange-400 to-orange-600", engine: "puzzle2048" },
+  { id: 19, title: "Minesweeper", description: "Avoid hidden mines!", category: "puzzle", emoji: "💣", gradient: "from-gray-500 to-gray-700", engine: "memory" },
+  { id: 20, title: "Memory Match", description: "Find matching pairs!", category: "puzzle", emoji: "🧠", gradient: "from-pink-500 to-rose-600", engine: "memory" },
+  { id: 21, title: "Sliding Puzzle", description: "Slide tiles into order!", category: "puzzle", emoji: "🧩", gradient: "from-indigo-500 to-blue-600", engine: "puzzle2048" },
+  { id: 22, title: "Simon Says", description: "Repeat the sequence!", category: "puzzle", emoji: "🎵", gradient: "from-purple-500 to-violet-700", engine: "memory" },
+  { id: 23, title: "Maze Escape", description: "Navigate the maze!", category: "puzzle", emoji: "🏰", gradient: "from-teal-500 to-emerald-700", engine: "clicker" },
+  { id: 24, title: "Sudoku", description: "Fill the 9x9 grid!", category: "puzzle", emoji: "9️⃣", gradient: "from-blue-500 to-indigo-600", engine: "puzzle2048" },
+  { id: 25, title: "Word Search", description: "Find hidden words!", category: "puzzle", emoji: "🔤", gradient: "from-cyan-500 to-teal-600", engine: "word" },
+  { id: 26, title: "Bubble Shooter", description: "Pop the bubbles!", category: "puzzle", emoji: "🫧", gradient: "from-sky-400 to-blue-600", engine: "shooter" },
+  { id: 27, title: "Tic Tac Toe", description: "Classic X and O game!", category: "strategy", emoji: "⭕", gradient: "from-cyan-500 to-blue-600", engine: "tictactoe" },
+  { id: 28, title: "Connect Four", description: "Connect four in a row!", category: "strategy", emoji: "🔴", gradient: "from-orange-500 to-yellow-500", engine: "tictactoe" },
+  { id: 29, title: "Basketball", description: "Time your shot!", category: "sports", emoji: "🏀", gradient: "from-orange-500 to-red-600", engine: "clicker" },
+  { id: 30, title: "Mini Golf", description: "Putt your way through 9 holes!", category: "sports", emoji: "⛳", gradient: "from-green-500 to-green-700", engine: "clicker" },
+  { id: 31, title: "Darts", description: "Hit the bullseye!", category: "sports", emoji: "🎯", gradient: "from-red-500 to-orange-600", engine: "clicker" },
+  { id: 32, title: "Bowling", description: "Strike down the pins!", category: "sports", emoji: "🎳", gradient: "from-rose-600 to-pink-700", engine: "clicker" },
+  { id: 33, title: "Billiards", description: "Sink all balls!", category: "sports", emoji: "🎱", gradient: "from-pink-400 to-rose-600", engine: "pong" },
+  { id: 34, title: "Coin Flip", description: "Heads or tails?", category: "casual", emoji: "🪙", gradient: "from-yellow-400 to-yellow-600", engine: "clicker" },
+  { id: 35, title: "Dice Roller", description: "Roll a high number!", category: "casual", emoji: "🎲", gradient: "from-amber-500 to-orange-600", engine: "clicker" },
+  { id: 36, title: "Spin Wheel", description: "Win prizes!", category: "casual", emoji: "🎡", gradient: "from-pink-500 to-purple-600", engine: "clicker" },
+  { id: 37, title: "Blackjack", description: "Beat the dealer to 21!", category: "cards", emoji: "🃏", gradient: "from-green-700 to-green-900", engine: "cards" },
+  { id: 38, title: "Solitaire", description: "Classic card sorting!", category: "cards", emoji: "🂡", gradient: "from-red-600 to-red-800", engine: "cards" },
+  { id: 39, title: "Hangman", description: "Guess the word!", category: "word", emoji: "📝", gradient: "from-amber-600 to-amber-800", engine: "word" },
+  { id: 40, title: "Crossword", description: "Fill the puzzle!", category: "word", emoji: "📰", gradient: "from-yellow-500 to-amber-600", engine: "word" },
+  { id: 41, title: "Calculator", description: "Simple calculator tool!", category: "tools", emoji: "🧮", gradient: "from-gray-500 to-gray-700", engine: "clicker" },
+  { id: 42, title: "Stopwatch", description: "Time events!", category: "tools", emoji: "⏱️", gradient: "from-blue-600 to-indigo-700", engine: "clicker" },
+  { id: 43, title: "Chess", description: "Classic chess vs AI!", category: "strategy", emoji: "♟️", gradient: "from-amber-700 to-amber-900", engine: "tictactoe" },
+  { id: 44, title: "Checkers", description: "Capture all pieces!", category: "strategy", emoji: "🔴", gradient: "from-red-700 to-red-900", engine: "tictactoe" },
+  { id: 45, title: "Rock Paper Scissors", description: "Classic hand game!", category: "casual", emoji: "✊", gradient: "from-orange-400 to-red-500", engine: "clicker" },
+  { id: 46, title: "Trivia Quiz", description: "Test your knowledge!", category: "casual", emoji: "❓", gradient: "from-purple-500 to-indigo-600", engine: "word" },
+  { id: 47, title: "Typing Speed", description: "How fast can you type?", category: "tools", emoji: "⌨️", gradient: "from-slate-600 to-slate-800", engine: "word" },
+  { id: 48, title: "Color Match", description: "Match colors fast!", category: "casual", emoji: "🎨", gradient: "from-fuchsia-500 to-pink-600", engine: "clicker" },
+  { id: 49, title: "Reaction Time", description: "Test your reflexes!", category: "casual", emoji: "⚡", gradient: "from-yellow-400 to-orange-500", engine: "clicker" },
+  { id: 50, title: "Poker", description: "Five-card draw poker!", category: "cards", emoji: "🃏", gradient: "from-green-600 to-emerald-800", engine: "cards" },
+  { id: 51, title: "Word Scramble", description: "Unscramble letters!", category: "word", emoji: "🔀", gradient: "from-teal-500 to-cyan-700", engine: "word" },
 ];
 
 // --- Game Components ---
@@ -618,42 +619,23 @@ export default function App() {
                   </button>
                 </div>
                 <div className="flex-1 relative bg-black flex items-center justify-center overflow-hidden p-4">
-                  {/* Game Router */}
-                  {selectedGame.title === "CyberDrift" && <CyberDrift onExit={() => setIsPlaying(false)} />}
-                  {selectedGame.title === "Cricket 3D" && <Cricket3DGame onExit={() => setIsPlaying(false)} />}
-                  
-                  {/* Arcade / Action Games */}
-                  {["Space Shooter", "Alien Invaders", "Tank Battle", "Cannon Shooter", "Asteroids", "Brick Breaker"].includes(selectedGame.title) && 
-                    <SpaceDefender onExit={() => setIsPlaying(false)} />}
-                  
-                  {/* Side Scrollers */}
-                  {["Flappy Wings", "Helicopter", "Penguin Slide", "Platform Jump", "Endless Runner", "Ninja Runner"].includes(selectedGame.title) && 
-                    <FlappyWings onExit={() => setIsPlaying(false)} />}
-                  
-                  {/* Puzzle Games */}
-                  {["Memory Match", "Simon Says", "Minesweeper"].includes(selectedGame.title) && 
-                    <MemoryMatch onExit={() => setIsPlaying(false)} />}
-                  {["2048", "Sliding Puzzle", "Block Puzzle", "Sudoku"].includes(selectedGame.title) && 
-                    <Game2048 onExit={() => setIsPlaying(false)} />}
-                  
-                  {/* Card Games */}
-                  {["Blackjack", "Poker", "Solitaire"].includes(selectedGame.title) && 
-                    <Blackjack onExit={() => setIsPlaying(false)} />}
-                  
-                  {/* Word Games */}
-                  {["Word Scramble", "Hangman", "Word Search", "Crossword", "Trivia Quiz"].includes(selectedGame.title) && 
-                    <WordScramble onExit={() => setIsPlaying(false)} />}
-                  
-                  {/* Classic Games */}
-                  {selectedGame.title === "Snake" && <SnakeGame onExit={() => setIsPlaying(false)} />}
-                  {["Pong", "Pinball"].includes(selectedGame.title) && <PongGame onExit={() => setIsPlaying(false)} />}
-                  {["Tic Tac Toe", "Connect Four", "Chess", "Checkers"].includes(selectedGame.title) && <TicTacToeGame onExit={() => setIsPlaying(false)} />}
-                  
-                  {/* Casual / Tools (Reflex Challenge) */}
-                  {
-                    !["CyberDrift", "Cricket 3D", "Space Shooter", "Alien Invaders", "Tank Battle", "Cannon Shooter", "Asteroids", "Brick Breaker", "Flappy Wings", "Helicopter", "Penguin Slide", "Platform Jump", "Endless Runner", "Ninja Runner", "Memory Match", "Simon Says", "Minesweeper", "2048", "Sliding Puzzle", "Block Puzzle", "Sudoku", "Blackjack", "Poker", "Solitaire", "Word Scramble", "Hangman", "Word Search", "Crossword", "Trivia Quiz", "Snake", "Pong", "Pinball", "Tic Tac Toe", "Connect Four", "Chess", "Checkers"].includes(selectedGame.title) && 
-                    <ClickerGame game={selectedGame} onExit={() => setIsPlaying(false)} />
-                  }
+                  {/* Clean Game Router using engine property */}
+                  {(() => {
+                    switch (selectedGame.engine) {
+                      case 'cyberdrift': return <CyberDrift onExit={() => setIsPlaying(false)} />;
+                      case 'cricket': return <Cricket3DGame onExit={() => setIsPlaying(false)} />;
+                      case 'shooter': return <SpaceDefender onExit={() => setIsPlaying(false)} />;
+                      case 'runner': return <FlappyWings onExit={() => setIsPlaying(false)} />;
+                      case 'memory': return <MemoryMatch onExit={() => setIsPlaying(false)} />;
+                      case 'puzzle2048': return <Game2048 onExit={() => setIsPlaying(false)} />;
+                      case 'cards': return <Blackjack onExit={() => setIsPlaying(false)} />;
+                      case 'word': return <WordScramble onExit={() => setIsPlaying(false)} />;
+                      case 'snake': return <SnakeGame onExit={() => setIsPlaying(false)} />;
+                      case 'pong': return <PongGame onExit={() => setIsPlaying(false)} />;
+                      case 'tictactoe': return <TicTacToeGame onExit={() => setIsPlaying(false)} />;
+                      default: return <ClickerGame game={selectedGame} onExit={() => setIsPlaying(false)} />;
+                    }
+                  })()}
                 </div>
               </div>
             )}
