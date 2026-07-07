@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect, useRef } from "react";
+import Cricket3DGame from "./Cricket3DGame";
 
 // --- Types ---
 interface Game {
@@ -25,6 +26,7 @@ const categories = [
 ];
 
 const games: Game[] = [
+  { id: 0, title: "Cricket 3D", description: "Full 3D Cricket experience! Bat against AI bowling.", category: "sports", emoji: "🏏", gradient: "from-green-600 to-emerald-800" },
   { id: 1, title: "Snake", description: "Eat food to grow longer without hitting yourself!", category: "arcade", emoji: "🐍", gradient: "from-green-500 to-emerald-700" },
   { id: 2, title: "Pac-Man", description: "Eat all dots while avoiding ghosts in the maze!", category: "arcade", emoji: "👻", gradient: "from-yellow-400 to-orange-500" },
   { id: 3, title: "Brick Breaker", description: "Smash bricks with a bouncing ball and paddle!", category: "arcade", emoji: "🧱", gradient: "from-red-500 to-orange-600" },
@@ -614,6 +616,7 @@ export default function App() {
                 </div>
                 <div className="flex-1 relative bg-black flex items-center justify-center overflow-hidden p-4">
                   {/* Game Router */}
+                  {selectedGame.title === "Cricket 3D" && <Cricket3DGame onExit={() => setIsPlaying(false)} />}
                   {selectedGame.title === "Snake" && <SnakeGame onExit={() => setIsPlaying(false)} />}
                   {selectedGame.title === "Pong" && <PongGame onExit={() => setIsPlaying(false)} />}
                   {selectedGame.title === "Tic Tac Toe" && <TicTacToeGame onExit={() => setIsPlaying(false)} />}
