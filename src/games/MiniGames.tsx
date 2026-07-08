@@ -1,7 +1,12 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 
+interface GameProps {
+  onExit: () => void;
+  game: { title: string; emoji: string; gradient: string };
+}
+
 // --- 1. Space Defender (Shoot 'em up) ---
-export const SpaceDefender = ({ onExit }: { onExit: () => void }) => {
+export const SpaceDefender = ({ onExit, game }: GameProps) => {
   const [playerX, setPlayerX] = useState(50);
   const [bullets, setBullets] = useState<{x: number, y: number}[]>([]);
   const [enemies, setEnemies] = useState<{x: number, y: number, id: number}[]>([]);
@@ -99,7 +104,7 @@ export const SpaceDefender = ({ onExit }: { onExit: () => void }) => {
           <div className="absolute top-4 right-4 text-sm text-gray-400">Arrows to Move, Space to Shoot</div>
           
           {/* Player */}
-          <div className="absolute bottom-[10%] text-4xl transition-all duration-75" style={{ left: `${playerX}%` }}>🚀</div>
+          <div className="absolute bottom-[10%] text-4xl transition-all duration-75" style={{ left: `${playerX}%` }}>{game.emoji}</div>
           
           {/* Bullets */}
           {bullets.map((b, i) => (
@@ -117,7 +122,7 @@ export const SpaceDefender = ({ onExit }: { onExit: () => void }) => {
 };
 
 // --- 2. Flappy Wings (Side scroller) ---
-export const FlappyWings = ({ onExit }: { onExit: () => void }) => {
+export const FlappyWings = ({ onExit, game }: GameProps) => {
   const [birdY, setBirdY] = useState(50);
   const [velocity, setVelocity] = useState(0);
   const [pipes, setPipes] = useState<{x: number, gapY: number, id: number}[]>([]);
@@ -189,8 +194,8 @@ export const FlappyWings = ({ onExit }: { onExit: () => void }) => {
           {!started && <div className="text-2xl font-bold text-white drop-shadow-md animate-pulse">Tap or Space to Start</div>}
           <div className="absolute text-4xl font-bold text-white drop-shadow-md top-4 left-4">Score: {score}</div>
           
-          {/* Bird */}
-          <div className="absolute text-4xl transition-all duration-75" style={{ left: '10%', top: `${birdY}%` }}>🐦</div>
+          {/* Bird/Player */}
+          <div className="absolute text-4xl transition-all duration-75" style={{ left: '10%', top: `${birdY}%` }}>{game.emoji}</div>
           
           {/* Pipes */}
           {pipes.map(p => (
@@ -209,7 +214,7 @@ export const FlappyWings = ({ onExit }: { onExit: () => void }) => {
 };
 
 // --- 3. Memory Match ---
-export const MemoryMatch = ({ onExit }: { onExit: () => void }) => {
+export const MemoryMatch = ({ onExit, game }: GameProps) => {
   const emojis = ['🍎', '🍌', '🍇', '🍉', '🍒', '🍓', '🍍', '🥝'];
   const [cards, setCards] = useState<{id: number, emoji: string, flipped: boolean, matched: boolean}[]>([]);
   const [flippedIds, setFlippedIds] = useState<number[]>([]);
@@ -249,7 +254,7 @@ export const MemoryMatch = ({ onExit }: { onExit: () => void }) => {
 
   return (
     <div className="w-full h-full bg-gray-900 flex flex-col items-center justify-center p-4">
-      <h2 className="text-2xl font-bold text-white mb-4">Memory Match <span className="text-gray-400 text-lg">Moves: {moves}</span></h2>
+      <h2 className="text-2xl font-bold text-white mb-4">{game.title} <span className="text-gray-400 text-lg">Moves: {moves}</span></h2>
       {won ? (
         <div className="text-center">
           <p className="text-3xl text-green-400 font-bold mb-4">You Won!</p>
@@ -275,7 +280,7 @@ export const MemoryMatch = ({ onExit }: { onExit: () => void }) => {
 };
 
 // --- 4. Blackjack ---
-export const Blackjack = ({ onExit }: { onExit: () => void }) => {
+export const Blackjack = ({ onExit, game }: GameProps) => {
   const [deck, setDeck] = useState<number[]>([]);
   const [playerHand, setPlayerHand] = useState<number[]>([]);
   const [dealerHand, setDealerHand] = useState<number[]>([]);
@@ -349,7 +354,7 @@ export const Blackjack = ({ onExit }: { onExit: () => void }) => {
 
   return (
     <div className="w-full h-full bg-green-800 flex flex-col items-center justify-center p-4 text-white">
-      <h2 className="text-3xl font-bold mb-8">Blackjack</h2>
+      <h2 className="text-3xl font-bold mb-8">{game.title}</h2>
       
       <div className="mb-8 text-center">
         <p className="text-gray-300 mb-2">Dealer: {gameState === 'playing' ? '?' : calcScore(dealerHand)}</p>
@@ -391,7 +396,7 @@ export const Blackjack = ({ onExit }: { onExit: () => void }) => {
 };
 
 // --- 5. Word Scramble ---
-export const WordScramble = ({ onExit }: { onExit: () => void }) => {
+export const WordScramble = ({ onExit, game }: GameProps) => {
   const words = ['REACT', 'CODING', 'PIXEL', 'ARCADE', 'BROWSER', 'GAMING', 'CYBER', 'DRIFT'];
   const [target, setTarget] = useState('');
   const [scrambled, setScrambled] = useState('');
@@ -421,7 +426,7 @@ export const WordScramble = ({ onExit }: { onExit: () => void }) => {
 
   return (
     <div className="w-full h-full bg-indigo-900 flex flex-col items-center justify-center p-4 text-white">
-      <h2 className="text-3xl font-bold mb-2">Word Scramble</h2>
+      <h2 className="text-3xl font-bold mb-2">{game.title}</h2>
       <p className="text-xl text-yellow-400 mb-8">Score: {score}</p>
       
       <div className="text-5xl font-black tracking-widest mb-8 bg-white/10 px-8 py-4 rounded-xl">{scrambled}</div>
@@ -447,7 +452,7 @@ export const WordScramble = ({ onExit }: { onExit: () => void }) => {
 };
 
 // --- 6. 2048 (Simplified) ---
-export const Game2048 = ({ onExit }: { onExit: () => void }) => {
+export const Game2048 = ({ onExit, game }: GameProps) => {
   const [grid, setGrid] = useState<number[][]>(Array(4).fill(null).map(() => Array(4).fill(0)));
   const [score, setScore] = useState(0);
 
@@ -533,7 +538,7 @@ export const Game2048 = ({ onExit }: { onExit: () => void }) => {
   return (
     <div className="w-full h-full bg-gray-900 flex flex-col items-center justify-center p-4 text-white">
       <div className="flex justify-between w-64 mb-4">
-        <h2 className="text-3xl font-black text-yellow-500">2048</h2>
+        <h2 className="text-3xl font-black text-yellow-500">{game.title}</h2>
         <div className="bg-gray-800 px-3 py-1 rounded text-sm font-bold">Score: {score}</div>
       </div>
       <div className="grid grid-cols-4 gap-2 bg-gray-800 p-2 rounded-lg">

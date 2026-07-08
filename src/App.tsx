@@ -603,8 +603,8 @@ export default function App() {
                 </div>
               </>
             ) : (
-              // Game View
-              <div className="flex flex-col h-[600px] bg-gray-950">
+              // Game View - KEY PROP FORCES FULL REMOUNT WHEN GAME CHANGES
+              <div key={selectedGame.id} className="flex flex-col h-[600px] bg-gray-950">
                 <div className="flex items-center justify-between px-6 py-4 border-b border-gray-800 bg-gray-900">
                   <div className="flex items-center gap-3">
                     <span className="text-2xl">{selectedGame.emoji}</span>
@@ -619,23 +619,18 @@ export default function App() {
                   </button>
                 </div>
                 <div className="flex-1 relative bg-black flex items-center justify-center overflow-hidden p-4">
-                  {/* Clean Game Router using engine property */}
-                  {(() => {
-                    switch (selectedGame.engine) {
-                      case 'cyberdrift': return <CyberDrift onExit={() => setIsPlaying(false)} />;
-                      case 'cricket': return <Cricket3DGame onExit={() => setIsPlaying(false)} />;
-                      case 'shooter': return <SpaceDefender onExit={() => setIsPlaying(false)} />;
-                      case 'runner': return <FlappyWings onExit={() => setIsPlaying(false)} />;
-                      case 'memory': return <MemoryMatch onExit={() => setIsPlaying(false)} />;
-                      case 'puzzle2048': return <Game2048 onExit={() => setIsPlaying(false)} />;
-                      case 'cards': return <Blackjack onExit={() => setIsPlaying(false)} />;
-                      case 'word': return <WordScramble onExit={() => setIsPlaying(false)} />;
-                      case 'snake': return <SnakeGame onExit={() => setIsPlaying(false)} />;
-                      case 'pong': return <PongGame onExit={() => setIsPlaying(false)} />;
-                      case 'tictactoe': return <TicTacToeGame onExit={() => setIsPlaying(false)} />;
-                      default: return <ClickerGame game={selectedGame} onExit={() => setIsPlaying(false)} />;
-                    }
-                  })()}
+                  {selectedGame.engine === 'shooter' && <SpaceDefender onExit={() => setIsPlaying(false)} game={selectedGame} />}
+                  {selectedGame.engine === 'runner' && <FlappyWings onExit={() => setIsPlaying(false)} game={selectedGame} />}
+                  {selectedGame.engine === 'snake' && <SnakeGame onExit={() => setIsPlaying(false)} />}
+                  {selectedGame.engine === 'pong' && <PongGame onExit={() => setIsPlaying(false)} />}
+                  {selectedGame.engine === 'tictactoe' && <TicTacToeGame onExit={() => setIsPlaying(false)} />}
+                  {selectedGame.engine === 'memory' && <MemoryMatch onExit={() => setIsPlaying(false)} game={selectedGame} />}
+                  {selectedGame.engine === 'puzzle2048' && <Game2048 onExit={() => setIsPlaying(false)} game={selectedGame} />}
+                  {selectedGame.engine === 'cards' && <Blackjack onExit={() => setIsPlaying(false)} game={selectedGame} />}
+                  {selectedGame.engine === 'word' && <WordScramble onExit={() => setIsPlaying(false)} game={selectedGame} />}
+                  {selectedGame.engine === 'cyberdrift' && <CyberDrift onExit={() => setIsPlaying(false)} />}
+                  {selectedGame.engine === 'cricket' && <Cricket3DGame onExit={() => setIsPlaying(false)} />}
+                  {selectedGame.engine === 'clicker' && <ClickerGame game={selectedGame} onExit={() => setIsPlaying(false)} />}
                 </div>
               </div>
             )}
