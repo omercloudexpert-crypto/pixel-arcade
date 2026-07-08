@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import Cricket3DGame from "./Cricket3DGame";
 import CyberDrift from "./games/CyberDrift";
-import { SpaceDefender, FlappyWings, MemoryMatch, Blackjack, WordScramble, Game2048 } from "./games/MiniGames";
+import { SpaceDefender, FlappyWings, MemoryMatch, Blackjack, WordScramble, Game2048, PacManGame } from "./games/MiniGames";
 
 // --- Types ---
 interface Game {
@@ -32,7 +32,7 @@ const games: Game[] = [
   { id: -1, title: "CyberDrift", description: "AAA Open World Racing.", category: "sports", emoji: "🏎️", gradient: "from-purple-600 to-blue-800", engine: "cyberdrift" },
   { id: 0, title: "Cricket 3D", description: "Full 3D Cricket experience!", category: "sports", emoji: "🏏", gradient: "from-green-600 to-emerald-800", engine: "cricket" },
   { id: 1, title: "Snake", description: "Eat food to grow longer!", category: "arcade", emoji: "🐍", gradient: "from-green-500 to-emerald-700", engine: "snake" },
-  { id: 2, title: "Pac-Man", description: "Eat dots, avoid ghosts!", category: "arcade", emoji: "👻", gradient: "from-yellow-400 to-orange-500", engine: "runner" },
+  { id: 2, title: "Pac-Man", description: "Eat dots, avoid ghosts!", category: "arcade", emoji: "👻", gradient: "from-yellow-400 to-orange-500", engine: "pacman" },
   { id: 3, title: "Brick Breaker", description: "Smash bricks!", category: "arcade", emoji: "🧱", gradient: "from-red-500 to-orange-600", engine: "shooter" },
   { id: 4, title: "Pong", description: "The original video game.", category: "arcade", emoji: "🏓", gradient: "from-gray-600 to-gray-800", engine: "pong" },
   { id: 5, title: "Asteroids", description: "Survive the asteroid field!", category: "arcade", emoji: "☄️", gradient: "from-gray-700 to-slate-900", engine: "shooter" },
@@ -53,7 +53,7 @@ const games: Game[] = [
   { id: 20, title: "Memory Match", description: "Find matching pairs!", category: "puzzle", emoji: "🧠", gradient: "from-pink-500 to-rose-600", engine: "memory" },
   { id: 21, title: "Sliding Puzzle", description: "Slide tiles into order!", category: "puzzle", emoji: "🧩", gradient: "from-indigo-500 to-blue-600", engine: "puzzle2048" },
   { id: 22, title: "Simon Says", description: "Repeat the sequence!", category: "puzzle", emoji: "🎵", gradient: "from-purple-500 to-violet-700", engine: "memory" },
-  { id: 23, title: "Maze Escape", description: "Navigate the maze!", category: "puzzle", emoji: "🏰", gradient: "from-teal-500 to-emerald-700", engine: "clicker" },
+  { id: 23, title: "Maze Escape", description: "Navigate the maze!", category: "puzzle", emoji: "🏰", gradient: "from-teal-500 to-emerald-700", engine: "pacman" },
   { id: 24, title: "Sudoku", description: "Fill the 9x9 grid!", category: "puzzle", emoji: "9️⃣", gradient: "from-blue-500 to-indigo-600", engine: "puzzle2048" },
   { id: 25, title: "Word Search", description: "Find hidden words!", category: "puzzle", emoji: "🔤", gradient: "from-cyan-500 to-teal-600", engine: "word" },
   { id: 26, title: "Bubble Shooter", description: "Pop the bubbles!", category: "puzzle", emoji: "🫧", gradient: "from-sky-400 to-blue-600", engine: "shooter" },
@@ -301,39 +301,85 @@ const PongGame = ({ onExit }: { onExit: () => void }) => {
 
 const TicTacToeGame = ({ onExit }: { onExit: () => void }) => {
   const [board, setBoard] = useState(Array(9).fill(null));
-  const [isXNext, setIsXNext] = useState(true);
+  const [isPlayerTurn, setIsPlayerTurn] = useState(true); // Player is X
   const winner = useMemo(() => {
     const lines = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
     for (let [a, b, c] of lines) {
       if (board[a] && board[a] === board[b] && board[a] === board[c]) return board[a];
     }
-    return null;
+    return board.every(Boolean) ? "Draw" : null;
   }, [board]);
 
+  // AI Logic
+  useEffect(() => {
+    if (!isPlayerTurn && !winner) {
+      const timer = setTimeout(() => {
+        // Simple AI: Win -> Block -> Center -> Random
+        const available = board.map((v, i) => v === null ? i : null).filter(v => v !== null) as number[];
+        let move = -1;
+
+        // 1. Check if AI can win
+        for (let i of available) {
+          let temp = [...board]; temp[i] = "O";
+          if (checkWinner(temp) === "O") { move = i; break; }
+        }
+        // 2. Check if Player can win (Block)
+        if (move === -1) {
+          for (let i of available) {
+            let temp = [...board]; temp[i] = "X";
+            if (checkWinner(temp) === "X") { move = i; break; }
+          }
+        }
+        // 3. Center
+        if (move === -1 && board[4] === null) move = 4;
+        // 4. Random
+        if (move === -1) move = available[Math.floor(Math.random() * available.length)];
+
+        if (move !== -1) {
+          const newBoard = [...board];
+          newBoard[move] = "O";
+          setBoard(newBoard);
+          setIsPlayerTurn(true);
+        }
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [isPlayerTurn, winner, board]);
+
+  const checkWinner = (b: (string | null)[]) => {
+    const lines = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+    for (let [a, bIdx, c] of lines) {
+      if (b[a] && b[a] === b[bIdx] && b[a] === b[c]) return b[a];
+    }
+    return null;
+  };
+
   const handleClick = (i: number) => {
-    if (board[i] || winner) return;
+    if (board[i] || winner || !isPlayerTurn) return;
     const newBoard = [...board];
-    newBoard[i] = isXNext ? "X" : "O";
+    newBoard[i] = "X";
     setBoard(newBoard);
-    setIsXNext(!isXNext);
+    setIsPlayerTurn(false);
   };
 
   return (
     <div className="flex flex-col items-center justify-center h-full w-full text-white">
-      <h3 className="text-2xl font-bold mb-6">{winner ? `Winner: ${winner}` : board.every(Boolean) ? "Draw!" : `Next Player: ${isXNext ? "X" : "O"}`}</h3>
+      <h3 className="text-2xl font-bold mb-2">You (X) vs AI (O)</h3>
+      <h3 className="text-xl font-bold mb-6 text-yellow-400">{winner ? (winner === "Draw" ? "It's a Draw!" : `${winner} Wins!`) : (isPlayerTurn ? "Your Turn" : "AI is thinking...")}</h3>
       <div className="grid grid-cols-3 gap-2 bg-gray-700 p-2 rounded-lg">
         {board.map((cell, i) => (
           <button
             key={i}
             onClick={() => handleClick(i)}
-            className="w-20 h-20 bg-gray-800 text-4xl font-bold flex items-center justify-center hover:bg-gray-700 rounded transition-colors"
+            disabled={!isPlayerTurn || !!cell || !!winner}
+            className="w-20 h-20 bg-gray-800 text-4xl font-bold flex items-center justify-center hover:bg-gray-700 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <span className={cell === "X" ? "text-blue-400" : "text-red-400"}>{cell}</span>
           </button>
         ))}
       </div>
       <div className="mt-6 flex gap-4">
-        <button onClick={() => { setBoard(Array(9).fill(null)); setIsXNext(true); }} className="text-sm text-gray-400 hover:text-white underline">Reset Game</button>
+        <button onClick={() => { setBoard(Array(9).fill(null)); setIsPlayerTurn(true); }} className="text-sm text-gray-400 hover:text-white underline">Reset Game</button>
         <button onClick={onExit} className="text-sm text-purple-400 hover:text-purple-300 font-bold">Exit Game</button>
       </div>
     </div>
@@ -624,6 +670,7 @@ export default function App() {
                   {selectedGame.engine === 'snake' && <SnakeGame onExit={() => setIsPlaying(false)} />}
                   {selectedGame.engine === 'pong' && <PongGame onExit={() => setIsPlaying(false)} />}
                   {selectedGame.engine === 'tictactoe' && <TicTacToeGame onExit={() => setIsPlaying(false)} />}
+                  {selectedGame.engine === 'pacman' && <PacManGame onExit={() => setIsPlaying(false)} game={selectedGame} />}
                   {selectedGame.engine === 'memory' && <MemoryMatch onExit={() => setIsPlaying(false)} game={selectedGame} />}
                   {selectedGame.engine === 'puzzle2048' && <Game2048 onExit={() => setIsPlaying(false)} game={selectedGame} />}
                   {selectedGame.engine === 'cards' && <Blackjack onExit={() => setIsPlaying(false)} game={selectedGame} />}

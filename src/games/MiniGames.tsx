@@ -5,10 +5,138 @@ interface GameProps {
   game: { title: string; emoji: string; gradient: string };
 }
 
-// --- 1. Space Defender (Shoot 'em up) ---
+// --- 0. Pac-Man Style Maze Chase (VS AI Ghosts) ---
+export const PacManGame = ({ onExit, game }: GameProps) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [score, setScore] = useState(0);
+  const [gameOver, setGameOver] = useState(false);
+  
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const gridSize = 20;
+    const cols = 20;
+    const rows = 20;
+    canvas.width = cols * gridSize;
+    canvas.height = rows * gridSize;
+
+    let player = { x: 1, y: 1 };
+    let ghost = { x: 18, y: 18 };
+    let dots: {x: number, y: number}[] = [];
+    
+    // Generate dots
+    for(let r=0; r<rows; r++) {
+      for(let c=0; c<cols; c++) {
+        if (Math.random() > 0.8 && !(r===1 && c===1) && !(r===18 && c===18)) {
+          dots.push({x: c, y: r});
+        }
+      }
+    }
+
+    let gameLoop: NodeJS.Timeout;
+
+    const draw = () => {
+      ctx.fillStyle = '#000';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      // Draw dots
+      ctx.fillStyle = '#fff';
+      dots.forEach(d => {
+        ctx.beginPath();
+        ctx.arc(d.x * gridSize + gridSize/2, d.y * gridSize + gridSize/2, 3, 0, Math.PI*2);
+        ctx.fill();
+      });
+
+      // Draw Player
+      ctx.fillStyle = '#fbbf24'; // Yellow
+      ctx.beginPath();
+      ctx.arc(player.x * gridSize + gridSize/2, player.y * gridSize + gridSize/2, 8, 0.2 * Math.PI, 1.8 * Math.PI);
+      ctx.lineTo(player.x * gridSize + gridSize/2, player.y * gridSize + gridSize/2);
+      ctx.fill();
+
+      // Draw Ghost (AI)
+      ctx.fillStyle = '#ef4444'; // Red
+      ctx.fillRect(ghost.x * gridSize + 2, ghost.y * gridSize + 2, gridSize-4, gridSize-4);
+    };
+
+    const update = () => {
+      if (gameOver) return;
+
+      // Move Ghost towards Player (Simple AI)
+      if (Math.random() > 0.3) { // Ghost speed
+        if (ghost.x < player.x) ghost.x++;
+        else if (ghost.x > player.x) ghost.x--;
+        else if (ghost.y < player.y) ghost.y++;
+        else if (ghost.y > player.y) ghost.y--;
+      }
+
+      // Collision with Ghost
+      if (ghost.x === player.x && ghost.y === player.y) {
+        setGameOver(true);
+      }
+
+      // Eat Dots
+      const dotIndex = dots.findIndex(d => d.x === player.x && d.y === player.y);
+      if (dotIndex !== -1) {
+        dots.splice(dotIndex, 1);
+        setScore(s => s + 10);
+      }
+
+      draw();
+    };
+
+    const handleKey = (e: KeyboardEvent) => {
+      if (gameOver) return;
+      let nextX = player.x;
+      let nextY = player.y;
+      if (e.key === 'ArrowUp') nextY--;
+      if (e.key === 'ArrowDown') nextY++;
+      if (e.key === 'ArrowLeft') nextX--;
+      if (e.key === 'ArrowRight') nextX++;
+
+      if (nextX >= 0 && nextX < cols && nextY >= 0 && nextY < rows) {
+        player.x = nextX;
+        player.y = nextY;
+        update();
+      }
+    };
+
+    window.addEventListener('keydown', handleKey);
+    gameLoop = setInterval(update, 200); // Game tick
+    draw();
+
+    return () => {
+      window.removeEventListener('keydown', handleKey);
+      clearInterval(gameLoop);
+    };
+  }, [gameOver]);
+
+  return (
+    <div className="w-full h-full bg-black flex flex-col items-center justify-center text-white">
+      {gameOver ? (
+        <div className="text-center">
+          <h2 className="text-3xl font-bold text-red-500 mb-4">CAUGHT BY GHOST!</h2>
+          <p className="text-xl mb-4">Score: {score}</p>
+          <button onClick={onExit} className="bg-purple-600 px-6 py-2 rounded font-bold">Back to Arcade</button>
+        </div>
+      ) : (
+        <>
+          <div className="mb-4 text-xl font-bold text-yellow-400">{game.title}: Score {score} (Arrow Keys to Move)</div>
+          <canvas ref={canvasRef} className="border-4 border-blue-900 rounded-lg bg-black" />
+        </>
+      )}
+    </div>
+  );
+};
+
+// --- 1. Space Defender (Shoot 'em up VS AI) ---
 export const SpaceDefender = ({ onExit, game }: GameProps) => {
   const [playerX, setPlayerX] = useState(50);
   const [bullets, setBullets] = useState<{x: number, y: number}[]>([]);
+  const [enemyBullets, setEnemyBullets] = useState<{x: number, y: number}[]>([]);
   const [enemies, setEnemies] = useState<{x: number, y: number, id: number}[]>([]);
   const [score, setScore] = useState(0);
   const [gameOver, setGameOver] = useState(false);
@@ -34,17 +162,30 @@ export const SpaceDefender = ({ onExit, game }: GameProps) => {
       // Move bullets
       setBullets(prev => prev.map(b => ({ ...b, y: b.y - 2 })).filter(b => b.y > 0));
       
-      // Move enemies
+      // Move enemy bullets (AI Shooting back!)
+      setEnemyBullets(prev => prev.map(b => ({ ...b, y: b.y + 3 })).filter(b => b.y < 100));
+
+      // Move enemies and AI Shooting Logic
       setEnemies(prev => {
-        const next = prev.map(e => ({ ...e, y: e.y + 1 })).filter(e => e.y < 100);
+        const next = prev.map(e => ({ ...e, y: e.y + 0.5 })).filter(e => e.y < 100); // Slower enemies
         // Spawn new enemy
-        if (Math.random() < 0.05) {
-          next.push({ x: Math.random() * 90 + 5, y: 0, id: idCounter.current++ });
+        if (Math.random() < 0.02) {
+          const newEnemy = { x: Math.random() * 90 + 5, y: 0, id: idCounter.current++ };
+          next.push(newEnemy);
+          // Enemy shoots immediately sometimes
+          if (Math.random() > 0.5) {
+             setEnemyBullets(b => [...b, { x: newEnemy.x, y: newEnemy.y }]);
+          }
+        }
+        // Random shooting from existing enemies
+        if (Math.random() < 0.05 && next.length > 0) {
+           const shooter = next[Math.floor(Math.random() * next.length)];
+           setEnemyBullets(b => [...b, { x: shooter.x, y: shooter.y }]);
         }
         return next;
       });
 
-      // Collision detection
+      // Collision detection (Player bullets hitting enemies)
       setBullets(currentBullets => {
         let remainingBullets = [...currentBullets];
         setEnemies(currentEnemies => {
@@ -63,11 +204,6 @@ export const SpaceDefender = ({ onExit, game }: GameProps) => {
           
           if (hits > 0) {
             setScore(s => s + hits * 10);
-            // Remove bullets that hit
-            remainingBullets = remainingBullets.filter(b => 
-              !remainingEnemies.some(e => Math.abs(b.x - e.x) < 5 && Math.abs(b.y - e.y) < 5) // This logic is slightly flawed but works for simple arcade
-            ); 
-            // Actually, let's just filter bullets that hit any enemy
             const hitBullets = currentBullets.filter(b => 
               currentEnemies.some(e => Math.abs(b.x - e.x) < 5 && Math.abs(b.y - e.y) < 5)
             );
@@ -78,12 +214,20 @@ export const SpaceDefender = ({ onExit, game }: GameProps) => {
         return remainingBullets;
       });
 
-      // Player hit check
+      // Player hit check (Enemies touching player)
       setEnemies(currentEnemies => {
         if (currentEnemies.some(e => Math.abs(e.x - playerX) < 5 && e.y > 85)) {
           setGameOver(true);
         }
         return currentEnemies;
+      });
+
+      // Player hit check (Enemy bullets hitting player)
+      setEnemyBullets(currentEnemyBullets => {
+        if (currentEnemyBullets.some(b => Math.abs(b.x - playerX) < 5 && b.y > 85)) {
+          setGameOver(true);
+        }
+        return currentEnemyBullets;
       });
 
     }, 50);
@@ -106,9 +250,14 @@ export const SpaceDefender = ({ onExit, game }: GameProps) => {
           {/* Player */}
           <div className="absolute bottom-[10%] text-4xl transition-all duration-75" style={{ left: `${playerX}%` }}>{game.emoji}</div>
           
-          {/* Bullets */}
+          {/* Player Bullets */}
           {bullets.map((b, i) => (
             <div key={i} className="absolute w-1 h-4 bg-yellow-400" style={{ left: `${b.x}%`, bottom: `${b.y}%` }} />
+          ))}
+          
+          {/* Enemy Bullets (AI Attacks!) */}
+          {enemyBullets.map((b, i) => (
+            <div key={i} className="absolute w-1 h-4 bg-red-500" style={{ left: `${b.x}%`, top: `${b.y}%` }} />
           ))}
           
           {/* Enemies */}
